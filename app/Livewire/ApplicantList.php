@@ -5,7 +5,11 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Applicant;
 use Livewire\WithPagination;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\On; 
 
+
+#[Layout('layouts.app')]
 class ApplicantList extends Component
 {
     use WithPagination;
@@ -15,8 +19,7 @@ class ApplicantList extends Component
 
     protected $paginationTheme = 'tailwind';
 
-    protected $listeners = ['applicantSaved' => '$refresh'];
-
+    protected $listeners = ['refreshApplicants' => '$refresh'];
     public function updatingSearch()
     {
         $this->resetPage();
@@ -25,10 +28,8 @@ class ApplicantList extends Component
     public function edit($id)
     {
         $applicant = Applicant::findOrFail($id);
-        $this->dispatch('editApplicant', applicant: $applicant->toArray())
-             ->to('applicant-form');
+        $this->dispatch('openEdit', $applicant)->to(\App\Livewire\Ui\ApplicantModal::class);
     }
-
     public function delete($id)
     {
         Applicant::findOrFail($id)->delete();
@@ -47,6 +48,6 @@ class ApplicantList extends Component
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('livewire.applicant-list', compact('applicants'))->layout('layouts.app');
+        return view('livewire.applicant-list', compact('applicants'));
     }
 }

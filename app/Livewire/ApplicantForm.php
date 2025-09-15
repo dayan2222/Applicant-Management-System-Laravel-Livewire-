@@ -4,13 +4,17 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Applicant;
+use Livewire\Attributes\On; 
+use Carbon\Carbon;
+use Livewire\Attributes\Layout;
 
+// #[Layout('layouts.app')]
 class ApplicantForm extends Component
 {
     public $applicantId;
     public $full_name, $father_name, $dob, $cnic, $domicile, $nationality;
     public $telephone, $cell, $present_address, $district, $province, $permanent_address;
-
+    protected $listeners = ['editApplicant' => 'editApplicantForm'];
     protected $rules = [
         'full_name' => 'required|string|max:255',
         'father_name' => 'nullable|string|max:255',
@@ -34,25 +38,42 @@ class ApplicantForm extends Component
     {
         $this->applicantId = $applicant['id'];
         $this->fill($applicant);
-
-        // adjust CNIC unique rule for updates
         $this->rules['cnic'] = 'required|string|max:20|unique:applicants,cnic,' . $this->applicantId;
     }
+
+    // public function loadApplicant($applicant)
+    // {
+    //     $this->applicantId = $applicant['id'];
+    //     $this->full_name = $applicant['full_name'];
+    //     $this->father_name = $applicant['father_name'];
+    //     $this->dob = $applicant['dob'];
+    //     $this->cnic = $applicant['cnic'];
+    //     $this->domicile = $applicant['domicile'];
+    //     $this->nationality = $applicant['nationality'];
+    // }
+
 
     public function mount($applicant = null)
     {
         if ($applicant) {
-            $this->applicantId = $applicant->id;
-            $this->fill($applicant->toArray());
-
+            // dd($applicant);
+            $this->applicantId = $applicant['id'];
+            $this->fill($applicant);
+             $this->dob = Carbon::parse($applicant['dob'])->format('Y-m-d');
             // update CNIC rule to ignore this applicant
-            $this->rules['cnic'] = 'required|string|size:15|unique:applicants,cnic,' . $applicant->id;
+            $this->rules['cnic'] = 'required|string|size:15|unique:applicants,cnic,' . $applicant['id'];
         }
     }
 
     public function save()
     {
-        $this->validate();
+        $rules = $this->rules;
+
+        if ($this->applicantId) {
+            $rules['cnic'] = 'required|string|size:15|unique:applicants,cnic,' . $this->applicantId;
+        }
+
+        $this->validate($rules);
 
         Applicant::updateOrCreate(
             ['id' => $this->applicantId],
@@ -62,13 +83,14 @@ class ApplicantForm extends Component
             ])
         );
 
-        $this->reset(); // clear form
-        session()->flash('success', 'Applicant saved successfully!');
-        $this->dispatch('applicantUpdated'); // notify list
+        session()->flash('success', 'Applicant information saved successfully.');
+        $this->dispatch('closeModal');
+        $this->dispatch('refreshApplicants');
+        $this->reset();
     }
 
     public function render()
     {
-        return view('livewire.applicant-form')->layout('layouts.app');
+        return view('livewire.applicant-form');
     }
 }

@@ -1,10 +1,11 @@
 <div class="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
 
     <div class="flex justify-end">
-        <a href="{{ route('applicants.create') }}"
+        <button
+            wire:click="$dispatch('openModal')"
             class="bg-blue-500 dark:bg-blue-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded hover:bg-blue-600 dark:hover:bg-blue-800">
             Add Applicant
-        </a>
+        </button>
     </div>
 
     <div class="flex justify-between items-center mb-4">
@@ -17,7 +18,7 @@
     </div>
     
 
-    <table class="w-full border-collapse border border-gray-300 dark:border-gray-600">
+    <table class=" min-w-full w-full border-collapse border border-gray-300 dark:border-gray-600">
         <thead>
             <tr class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-left">
                 <th class="border px-3 py-2">#</th>
@@ -41,8 +42,8 @@
                     <td class="border px-3 py-2">{{ $applicant->province }}</td>
                     <td class="border px-3 py-2">{{ $applicant->cell }}</td>
                     <td class="border px-3 py-2 space-x-2">
-                        <button wire:click="edit({{ $applicant->id }})"
-                            class="bg-yellow-500  px-2 py-1 rounded text-sm">Edit</button>
+                        <button command="show-modal" commandfor="dialog" wire:click="edit({{ $applicant->id }})"
+                            class="rounded-md bg-yellow-500  px-2 py-1 text-sm">Edit</button>
                         <button wire:click="delete({{ $applicant->id }})"
                             class="bg-red-500  px-2 py-1 rounded text-sm"
                             onclick="return confirm('Are you sure?')">Delete</button>

@@ -1,0 +1,29 @@
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+ 
+Role::create(['name' => 'student']);
+= Spatie\Permission\Models\Role {#5694
+    guard_name: "web",
+    name: "student",
+    updated_at: "2025-09-08 16:19:21",
+    created_at: "2025-09-08 16:19:21",
+    id: 1,
+  }
+
+Role::create(['name' => 'admin']);
+= Spatie\Permission\Models\Role {#5714
+    guard_name: "web",
+    name: "admin",
+    updated_at: "2025-09-08 16:19:41",
+    created_at: "2025-09-08 16:19:41",
+    id: 2,
+  }
+
+Permission::create(['name' => 'student_admission']);
+= Spatie\Permission\Models\Permission {#6261
+    guard_name: "web",
+    name: "student_admission",
+    updated_at: "2025-09-08 16:20:42",
+    created_at: "2025-09-08 16:20:42",
+    id: 1,
+  }

@@ -17,9 +17,11 @@ Route::view('/', 'welcome');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::view('profile', 'profile')->name('profile');
-    Route::get('/applicants/create', ApplicantForm::class)->name('applicants.create');
-    Route::get('/applicants/list', ApplicantList::class)->name('applicants-list');
-    Route::get('/applicants/{id}/edit', ApplicantForm::class)->name('applicants.edit');
+    // Route::get('/applicants/create', ApplicantForm::class)->name('applicants.create');
+    // Route::get('/applicants/list', ApplicantList::class)->name('applicants-list');
+    Route::get('/applicants', function () {
+        return view('livewire.applicants.index');
+    })->name('applicants-list');
 });
 
 
